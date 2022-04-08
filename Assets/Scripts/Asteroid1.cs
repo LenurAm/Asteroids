@@ -15,8 +15,8 @@ public class Asteroid1 : MonoBehaviour
     /// Asteroid mooving
     /// </summary>
     
-    const float MaxImpulseForce = 5f;
-    const float MinImpulseForce = 2f;
+    const float MaxImpulseForce = 2f;
+    const float MinImpulseForce = 0.1f;
     void Start()
     {
         
@@ -78,9 +78,72 @@ public class Asteroid1 : MonoBehaviour
     }
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.CompareTag("Ship"))
-            Destroy(gameObject);
+        //if (col.gameObject.CompareTag("Ship"))
+        //{ Destroy(gameObject); }
+
+        if (col.gameObject.CompareTag("Bullet"))
+        {
+            //Dectroy bullet
+            Destroy(col.gameObject);
+            
+            //cut the asteroid half
+
+            //get the scale of asteroid
+            Vector3 halfAsteroid = gameObject.transform.localScale;
+            //cut the asteroids' collider on half due to the collision
+            CircleCollider2D radius=gameObject.GetComponent<CircleCollider2D>();
+            float newRadius=radius.radius;
+            newRadius = newRadius / 2;
+            radius.radius = newRadius;
+                
+                       
+            halfAsteroid.x = halfAsteroid.x / 2;
+            halfAsteroid.y = halfAsteroid.y / 2;
+            //change asteroid size
+            gameObject.transform.localScale = halfAsteroid;
+
+            
+
+            //check the asteroid size
+            if ((halfAsteroid.x < 0.5) && (halfAsteroid.y < 0.5))
+            { //if asteroid less than half, destroy it
+                Destroy(gameObject);
+            }
+            else
+            //instatiate new asteroids
+            {
+                GameObject newAsteroid = Instantiate<GameObject>(gameObject);
+                GameObject newAsteroid1=Instantiate<GameObject>(gameObject);
+                //move the new small asteroids
+                Asteroid1 script=newAsteroid.GetComponent<Asteroid1>();
+                script.StartMoving();
+                Asteroid1 script1=newAsteroid1.GetComponent<Asteroid1>();
+                script1.StartMoving();
+                //destro the big one asteroid
+                Destroy(gameObject);
+                
+            }
+
+
+
+
+        }
+
     }
-
-
+    /// <summary>
+    /// two small asteroids start moving in random direction
+    /// </summary>
+    public void StartMoving()
+    {
+        
+        float randomAngle = Random.Range(0,2 *Mathf.PI);
+        Vector2 moveDirection = new Vector2(Mathf.Cos(randomAngle), Mathf.Sin(randomAngle));
+        float magnitutde = Random.Range(MinImpulseForce, MaxImpulseForce);
+        GetComponent<Rigidbody2D>().AddForce(moveDirection * magnitutde, ForceMode2D.Impulse);
+    }
+        
+    
 }
+
+
+

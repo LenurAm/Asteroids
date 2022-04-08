@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Ship1 : MonoBehaviour
 {
+    [SerializeField]
+    GameObject prefabBullet;
+
     Rigidbody2D rb2D;
     Vector2 thrustDirection = new Vector2(1, 0);
     const float ThrustForce = 5;
@@ -40,13 +43,19 @@ public class Ship1 : MonoBehaviour
             thrustDirection.y=Mathf.Sin(zRotation);
 
         }
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            GameObject bullet = Instantiate<GameObject>(prefabBullet,transform.position,Quaternion.identity);
+            Bullet script=bullet.GetComponent<Bullet>();
+            script.ApplyForce(thrustDirection);
+               
+        }
     }
     void FixedUpdate()
     {
         if (Input.GetAxis("Thrust") != 0)
         {
-
-            rb2D.AddForce(
+               rb2D.AddForce(
                 thrustDirection * ThrustForce,
                 ForceMode2D.Force);
         }
@@ -56,6 +65,7 @@ public class Ship1 : MonoBehaviour
     {
         if (col.gameObject.CompareTag("Asteroid"))
             Destroy(gameObject);
+            Destroy(col.gameObject);
     }
     //void OnBecameInvisible()
     //{
