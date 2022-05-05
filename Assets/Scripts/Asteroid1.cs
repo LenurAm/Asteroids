@@ -80,12 +80,13 @@ public class Asteroid1 : MonoBehaviour
     {
         //if (col.gameObject.CompareTag("Ship"))
         //{ Destroy(gameObject); }
-
+            
         if (col.gameObject.CompareTag("Bullet"))
         {
             //Dectroy bullet
             Destroy(col.gameObject);
-            
+            //play the sound when asteroid is hitted
+            AudioManager.Play(AudioClipName.AsteroidHit);
             //cut the asteroid half
 
             //get the scale of asteroid

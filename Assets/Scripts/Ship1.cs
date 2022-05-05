@@ -6,6 +6,8 @@ public class Ship1 : MonoBehaviour
 {
     [SerializeField]
     GameObject prefabBullet;
+    [SerializeField]
+    HUD hud;
 
     Rigidbody2D rb2D;
     Vector2 thrustDirection = new Vector2(1, 0);
@@ -48,6 +50,7 @@ public class Ship1 : MonoBehaviour
             GameObject bullet = Instantiate<GameObject>(prefabBullet,transform.position,Quaternion.identity);
             Bullet script=bullet.GetComponent<Bullet>();
             script.ApplyForce(thrustDirection);
+            AudioManager.Play(AudioClipName.PlayerShot);
                
         }
     }
@@ -64,8 +67,14 @@ public class Ship1 : MonoBehaviour
    void OnCollisionEnter2D(Collision2D col)
     {
         if (col.gameObject.CompareTag("Asteroid"))
+        {
+            hud=hud.GetComponent<HUD>();
+            hud.StoGameTimer();
+            //play the sound of ship destroing
+            AudioManager.Play(AudioClipName.PlayerDeath);
             Destroy(gameObject);
             Destroy(col.gameObject);
+        }
     }
     //void OnBecameInvisible()
     //{
