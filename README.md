@@ -1,2 +1,2 @@
-# Asteroids
- The small game made in Unity. The starship is shooting by meteorits. 
+# Asteroids 2D
+ The small game made in Unity. The starship is shooting to meteorits. 
